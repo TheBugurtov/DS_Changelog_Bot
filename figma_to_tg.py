@@ -1,4 +1,5 @@
 import os
+import re
 import requests
 import time
 from datetime import datetime
@@ -11,6 +12,10 @@ TELEGRAM_CHAT_ID = os.getenv("CHANNEL_ID")
 
 HISTORY_DIR = "history"
 os.makedirs(HISTORY_DIR, exist_ok=True)
+
+def sanitize_filename(filename):
+    """Заменяет недопустимые символы в именах файлов"""
+    return re.sub(r'[:]', '_', filename)
 
 def get_frame_text(file_id, node_id):
     url = f"https://api.figma.com/v1/files/{file_id}/nodes?ids={node_id}"
@@ -30,11 +35,9 @@ def extract_text_with_newlines(node):
     """Извлекает текст с сохранением переносов строк"""
     text = ""
     
-    # Если это текстовый узел
     if node.get("type") == "TEXT" and "characters" in node:
         text += node["characters"] + "\n"
     
-    # Обработка дочерних элементов
     if "children" in node:
         for child in node["children"]:
             text += extract_text_with_newlines(child)
@@ -42,14 +45,16 @@ def extract_text_with_newlines(node):
     return text
 
 def get_last_text(frame_id):
-    filepath = f"{HISTORY_DIR}/{frame_id}.txt"
+    safe_filename = sanitize_filename(frame_id)
+    filepath = f"{HISTORY_DIR}/{safe_filename}.txt"
     if os.path.exists(filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             return f.read()
     return ""
 
 def save_last_text(frame_id, text):
-    filepath = f"{HISTORY_DIR}/{frame_id}.txt"
+    safe_filename = sanitize_filename(frame_id)
+    filepath = f"{HISTORY_DIR}/{safe_filename}.txt"
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(text)
 
