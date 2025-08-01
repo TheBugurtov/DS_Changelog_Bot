@@ -18,6 +18,7 @@ def sanitize_filename(filename):
     return re.sub(r'[:]', '_', filename)
 
 def get_frame_text(file_id, node_id):
+    """Получает текст из Figma с сохранением структуры"""
     url = f"https://api.figma.com/v1/files/{file_id}/nodes?ids={node_id}"
     headers = {"X-Figma-Token": FIGMA_TOKEN}
     
@@ -26,13 +27,13 @@ def get_frame_text(file_id, node_id):
         response.raise_for_status()
         data = response.json()
         node = data["nodes"][node_id]["document"]
-        return extract_text_with_newlines(node)
+        return extract_text_preserve_structure(node)
     except Exception as e:
         print(f"[ERROR] Ошибка получения текста для {file_id}:{node_id} - {str(e)}")
         return ""
 
-def extract_text_with_newlines(node):
-    """Извлекает текст с сохранением переносов строк"""
+def extract_text_preserve_structure(node):
+    """Извлекает текст, сохраняя оригинальную структуру строк"""
     text = ""
     
     if node.get("type") == "TEXT" and "characters" in node:
@@ -40,7 +41,7 @@ def extract_text_with_newlines(node):
     
     if "children" in node:
         for child in node["children"]:
-            text += extract_text_with_newlines(child)
+            text += extract_text_preserve_structure(child)
     
     return text
 
@@ -58,50 +59,70 @@ def save_last_text(frame_id, text):
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(text)
 
-def find_added_lines(old, new):
-    if not old:
-        return new if new else ""
+def find_new_entries(old_text, new_text):
+    """Находит новые записи, сохраняя группировку по датам"""
+    if not old_text:
+        return new_text
     
-    old_lines = old.splitlines()
-    new_lines = new.splitlines()
-    added_lines = []
+    old_entries = split_into_entries(old_text)
+    new_entries = split_into_entries(new_text)
     
-    for i in range(len(new_lines)):
-        if i >= len(old_lines) or new_lines[i] != old_lines[i]:
-            added_lines.append(new_lines[i])
+    added_entries = []
+    for date, entries in new_entries.items():
+        if date not in old_entries:
+            added_entries.append((date, entries))
+        else:
+            new_items = [e for e in entries if e not in old_entries[date]]
+            if new_items:
+                added_entries.append((date, new_items))
     
-    return "\n".join(added_lines) if added_lines else ""
+    return added_entries
 
-def format_message(title, changes):
-    if not changes.strip():
-        return ""
+def split_into_entries(text):
+    """Разбивает текст на записи, сгруппированные по датам"""
+    entries = {}
+    current_date = None
+    current_items = []
     
-    message = f"<b>🔄 Обновление в {title}</b>\n\n"
-    lines = changes.splitlines()
-    is_date_line = False
-    
-    for line in lines:
+    for line in text.splitlines():
         line = line.strip()
         if not line:
             continue
             
-        if any(month in line.lower() for month in ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]):
-            message += f"<b>{line}</b>\n"
-            is_date_line = True
+        # Проверяем, является ли строка датой
+        if any(month in line.lower() for month in ["янв", "фев", "мар", "апр", "май", "июн", 
+                                                "июл", "авг", "сен", "окт", "ноя", "дек"]):
+            if current_date:
+                entries[current_date] = current_items
+            current_date = line
+            current_items = []
         else:
-            if is_date_line:
-                message += f"{line}\n"
-                is_date_line = False
-            else:
-                message += f"{line}\n"
-        message += "\n" if is_date_line else ""
+            current_items.append(line)
     
-    # Удаляем лишние переносы в конце
+    if current_date:
+        entries[current_date] = current_items
+    
+    return entries
+
+def format_entries(title, entries):
+    """Форматирует записи для Telegram"""
+    if not entries:
+        return ""
+    
+    message = f"<b>🔄 Обновление в {title}</b>\n\n"
+    
+    for date, items in entries:
+        message += f"<b>{date}</b>\n"
+        for item in items:
+            message += f"{item}\n"
+        message += "\n"
+    
     return message.strip()
 
-def send_to_telegram(message):
-    if not message.strip():
-        return
+def send_telegram_message(message):
+    """Отправляет сообщение в Telegram"""
+    if not message or not message.strip():
+        return False
     
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     data = {
@@ -112,33 +133,51 @@ def send_to_telegram(message):
     
     try:
         response = requests.post(url, data=data, timeout=10)
-        if response.status_code != 200:
-            print(f"[ERROR] Ошибка отправки: {response.text}")
+        if response.status_code == 200:
+            return True
+        print(f"[ERROR] Telegram API: {response.status_code}, {response.text}")
     except Exception as e:
-        print(f"[ERROR] Сетевая ошибка: {str(e)}")
+        print(f"[ERROR] Ошибка отправки: {str(e)}")
+    
+    return False
 
 def process_frame(config):
     frame_id = f"{config['file_id']}_{config['node_id']}"
-    print(f"[INFO] Проверка фрейма {config['title']}")
+    print(f"\n[INFO] Проверка фрейма: {config['title']}")
     
+    # Получаем текущий текст
     current_text = get_frame_text(config["file_id"], config["node_id"])
     if not current_text:
+        print("[WARNING] Не удалось получить текст из Figma")
         return
     
+    print("[DEBUG] Текущий текст из Figma:")
+    print(current_text)
+    
+    # Получаем предыдущую версию
     last_text = get_last_text(frame_id)
-    changes = find_added_lines(last_text, current_text)
     
-    if changes:
-        message = format_message(config["title"], changes)
-        if message:
-            print(f"[DEBUG] Форматированное сообщение:\n{message}")
-            send_to_telegram(message)
-            print(f"[INFO] Отправлены изменения для {config['title']}")
+    # Находим новые записи
+    new_entries = find_new_entries(last_text, current_text)
     
-    save_last_text(frame_id, current_text)
+    if new_entries:
+        # Форматируем и отправляем сообщение
+        message = format_entries(config["title"], new_entries)
+        print("[DEBUG] Форматированное сообщение:")
+        print(message)
+        
+        if send_telegram_message(message):
+            print("[SUCCESS] Сообщение успешно отправлено")
+        else:
+            print("[ERROR] Не удалось отправить сообщение")
+        
+        # Сохраняем новую версию
+        save_last_text(frame_id, current_text)
+    else:
+        print("[INFO] Новых изменений не обнаружено")
 
 def main():
-    print(f"=== Запуск проверки {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===")
+    print(f"\n=== Запуск проверки {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===")
     
     for config in FRAME_CONFIGS:
         try:
@@ -146,7 +185,7 @@ def main():
         except Exception as e:
             print(f"[ERROR] Ошибка обработки {config['title']}: {str(e)}")
     
-    print("=== Проверка завершена ===")
+    print("\n=== Проверка завершена ===")
 
 if __name__ == "__main__":
     main()
