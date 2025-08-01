@@ -21,18 +21,25 @@ def get_frame_text(file_id, node_id):
         response.raise_for_status()
         data = response.json()
         node = data["nodes"][node_id]["document"]
-        return extract_text_recursive(node)
+        return extract_text_with_newlines(node)
     except Exception as e:
         print(f"[ERROR] Ошибка получения текста для {file_id}:{node_id} - {str(e)}")
         return ""
 
-def extract_text_recursive(node):
+def extract_text_with_newlines(node):
+    """Извлекает текст с сохранением переносов строк"""
     text = ""
+    
+    # Если это текстовый узел
     if node.get("type") == "TEXT" and "characters" in node:
         text += node["characters"] + "\n"
-    for child in node.get("children", []):
-        text += extract_text_recursive(child)
-    return text.strip()
+    
+    # Обработка дочерних элементов
+    if "children" in node:
+        for child in node["children"]:
+            text += extract_text_with_newlines(child)
+    
+    return text
 
 def get_last_text(frame_id):
     filepath = f"{HISTORY_DIR}/{frame_id}.txt"
@@ -68,8 +75,12 @@ def format_message(title, changes):
     lines = changes.splitlines()
     
     for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+            
         if any(month in line.lower() for month in ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]):
-            message += f"<b>{line}</b>\n"
+            message += f"<b>{line}</b>\n\n"
         else:
             message += f"{line}\n"
     
