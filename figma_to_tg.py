@@ -78,6 +78,7 @@ def format_message(title, changes):
     
     message = f"<b>🔄 Обновление в {title}</b>\n\n"
     lines = changes.splitlines()
+    is_date_line = False
     
     for line in lines:
         line = line.strip()
@@ -85,10 +86,17 @@ def format_message(title, changes):
             continue
             
         if any(month in line.lower() for month in ["янв", "фев", "мар", "апр", "май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"]):
-            message += f"<b>{line}</b>\n\n"
+            message += f"<b>{line}</b>\n"
+            is_date_line = True
         else:
-            message += f"{line}\n"
+            if is_date_line:
+                message += f"{line}\n"
+                is_date_line = False
+            else:
+                message += f"{line}\n"
+        message += "\n" if is_date_line else ""
     
+    # Удаляем лишние переносы в конце
     return message.strip()
 
 def send_to_telegram(message):
@@ -123,6 +131,7 @@ def process_frame(config):
     if changes:
         message = format_message(config["title"], changes)
         if message:
+            print(f"[DEBUG] Форматированное сообщение:\n{message}")
             send_to_telegram(message)
             print(f"[INFO] Отправлены изменения для {config['title']}")
     
