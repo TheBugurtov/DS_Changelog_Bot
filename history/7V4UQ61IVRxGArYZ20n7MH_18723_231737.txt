@@ -2,6 +2,10 @@ mts design system
 Changelog
 in progress
 Здесь отображены последние изменения в библиотеке.  
+2 августа 2025
+Added
+Card
+тестирование компонента
 14 июля 2025
 Updated
 Toast
