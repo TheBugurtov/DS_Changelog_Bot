@@ -3,7 +3,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/TheBugurtov/DS_Changelog_Bot/bot.yml?style=flat-square)
 ![Python Version](https://img.shields.io/badge/python-3.11+-blue?style=flat-square)
 
-Бот для автоматической публикации изменений из Figma в Telegram-канал. Отслеживает изменения в указанных фреймах (секйчас в конфиге их 3) и публикует их в формате changelog.
+Бот для автоматической публикации изменений из Figma в Telegram-канал. Отслеживает изменения в указанных фреймах (сейчас в конфиге их 3) и публикует их в формате changelog.
 
 ## Основные функции
 
