@@ -2,6 +2,10 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
+4 августа 2025
+Added
+Cookie Banner
+В связи с обновлением редполитики слово «cookies» изменено на «куки» 
 18 июля 2025
 Added
 Cookie Banner

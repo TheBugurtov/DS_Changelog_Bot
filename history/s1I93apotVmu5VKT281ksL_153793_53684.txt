@@ -2,6 +2,10 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
+18 июля 2025
+Updated
+Modal Card Graphic
+добавлена возможность использовать графику  из библиотеки Placeholders
 10 июля 2025
 Updated
 Table Cell Compact
