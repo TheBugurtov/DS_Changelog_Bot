@@ -1,0 +1,352 @@
+mts design system
+What’s new
+in progress
+Здесь отображены последние изменения в библиотеке.  
+16 июля 2025
+Added
+Pulse
+продуктовая иконка
+Pulse
+логотип для веба
+Deleted
+Navigator
+Auto
+Auto OS
+Auto Mobile
+продуктовые иконки и логотипы брендов перенесены в архивный файл
+4 июня 2025
+Added
+Dialer
+добавлена иконка дайлера
+Return
+добавлена иконка действия «Вернуть»
+Duplicate
+добавлена иконка действия «Дублировать»
+Call Plus
+добавлена иконка телефона cо знаком плюс
+21 мая 2025
+Added
+Call Outgoing Unanswered
+добавлена иконка неотвеченного исходящего вызова
+16 мая 2025
+Added
+MWS Brand Logo
+добавлен логотип MWS
+Updated
+Product Logo
+Product Logo Long Mobile
+Product Logo Very Long Mobile
+Product Logo Beta
+В этих компонентах-шаблонах добавлено переключение на логотип MWS. Текстовый слой для удобства вынесен в Properties
+22 апреля 2025
+Added
+Optimus
+добавлена продуктовая иконка
+Optimus
+добавлен логотип
+16 апреля 2025
+Added
+Thermometer
+добавлена иконка градусника
+7 апреля 2025
+Added
+Spark
+добавлена иконка AI
+24 марта 2025
+Added
+Picture and Text
+добавлена иконка изображения и текста под ним
+21 марта 2025
+Updated
+Drag and Drop
+скорректирован шейп иконки в размерах 16 и 24
+Added
+Language
+добавлена иконка 32 размера в стиле Outline 
+3 марта 2025
+Updated
+Money
+для продуктовой иконки добавлена версия без фона
+Added
+Добавлена темизация под Bronevik
+Money
+добавлен логотип МТС Деньги
+20 февраля 2025
+Added
+Добавлена темизация под Bronevik
+17 февраля 2025
+Updated
+Flex
+обновлена продуктовая иконка
+Было:
+Стало:
+Flex
+обновлен логотип
+Added
+Concert
+Picture in Picture Exit
+Добавлены новые иконки
+14 ноября 2024
+Updated
+Minus
+добавлен размер 32
+Added
+Spruce
+Mitten
+Christmas Ornament
+Showman
+Sciencepop
+Reality
+29 октября 2024
+Added
+Analytics
+добавлен логотип продукта МТС Аналитика
+26 сентября 2024
+Updated
+Copy
+Info Circle
+Cross Circle
+добавлен размер 32
+Airplay
+Airplay Off
+Chromecast
+добавлен стиль Fill
+Added
+Money
+добавлена продуктовая иконка МТС Деньги
+23 августа 2024
+Updated
+MTS Navigator
+Замена повторяющегося названия иконки: Swimming Pool на Swimming
+2 августа 2024
+Added
+Добавлено 50 новых иконок для MTS Navigator
+Updated
+Dzen
+Обновлен шейп иконки, добавлен размер 16
+30 июля 2024
+Added
+Picture in Picture
+Добавлена иконка свернутого экрана плеера
+Volcano
+Добавлена иконка вулкана
+12 июля 2024
+Updated
+Language
+Добавлен стиль Fill
+Added
+Keys
+Добавлена иконка связки ключей
+Fingerprint
+Добавлена иконка отпечатка пальца
+14 июня 2024
+Added
+Flex
+Добавлена иконка продукта
+Flex
+Добавлен логотип продукта для сайта
+Power
+Добавлена интерфейсная иконка вкл/выкл
+Updated
+Call Incoming
+Call Outgoing
+Call Missed
+Изменение наклона шейпов иконок по запросу продукта
+5 июня 2024
+Added
+Fog Play
+Добавлена иконка продукта
+Fog Play
+Добавлен логотип продукта для сайта
+Updated
+Vse Strahovki
+Переименована иконка продукта. 
+Старое название: Insurance
+Новое: Vse Strahovki
+Vse Strahovki
+Переименован компонент в связи с обновлением
+названия продукта, изменен текст внутри логотипа
+Stroki
+Обновлена правая текстовая часть логотипа
+Deprecated
+Cashback
+Продуктовая иконка помечена как устаревшая
+Junior
+Логотип для сайта помечен как устаревший
+30 мая 2024
+Updated
+MTS Logos
+Добавлен размер M для Header (Desktop, Tablet)
+MTS Logos Presets
+Увеличен отступ в размере М  
+21 мая 2024
+Updated
+Battery
+Добавлены размеры 32, 44 px
+Ecological Class
+Обновлен шейп
+Stop Line
+Обновлен шейп
+16 мая 2024
+Added
+MTS Navigator
+Добавлены 64 новые иконки
+Updated
+Folder
+Обновлены шейпы размеров: 16, 24 px
+Folder
+Добавлены размеры 32, 44 px
+15 мая 2024
+Updated
+Business
+Добавлен размер 32
+13 мая 2024
+Updated
+Brand Logo
+Добавлен размер под Desktop
+MTS Logos Presets
+Добавлены размеры под Desktop
+17 апреля 2024
+Added
+Additional
+Дополнительная информация к гайдам интерфейсных иконок
+16 апреля 2024
+Updated
+Vk
+Обновлен шейп иконки ВК
+Added
+Reply
+Добавлена новая иконка 
+Wallet
+Добавлены 44 и 44+ размеры
+Support
+Добавлен 32 размер
+Chat
+Добавлен 32 размер
+1 апреля 2024
+Updated
+Заменены цветовые токены  (стили Base на переменные Variables)
+в компонентах на страницах:
+— Interface Icons Documents
+— Product Icons
+— MTS Logos 
+— MTS Logos Presets
+27 марта 2024
+Updated
+Smart Home
+Обновлен шейп продуктовой иконки МТС Умный Дом
+15 марта 2024
+Added
+Link
+Добавлена продуктовая иконка МТС Линк
+Link
+Добавлен логотип МТС Линк
+13 марта 2024
+Updated
+Cashback
+Логотип помечен как устаревший. 
+Отдельного продукта больше не существует.
+8 февраля 2024
+Added
+Question Circle
+Добавлен размер иконки 32 px (Fill, Outline)  
+Wallet
+Добавлены 44 и 44+ размеры
+Support
+Добавлен 32 размер
+Chat
+Добавлен 32 размер
+Parameters
+Добавлен размер иконки 32 px (Fill, Outline)  
+Wallet
+Добавлены 44 и 44+ размеры
+Support
+Добавлен 32 размер
+Chat
+Добавлен 32 размер
+More
+Добавлен размер иконки 32 px (Outline)  
+Wallet
+Добавлены 44 и 44+ размеры
+Support
+Добавлен 32 размер
+Chat
+Добавлен 32 размер
+6 февраля 2024
+Added
+Suitcase
+Добавлена новая иконка 
+Wallet
+Добавлены 44 и 44+ размеры
+Support
+Добавлен 32 размер
+Chat
+Добавлен 32 размер
+10 января 2024
+Added
+Добавлен новый блок c 80-ю иконками для внутренних продуктов  
+Internal Products
+Добавлены двойные стрелки в блок Arrows
+Double Arrow Down
+Double Arrow Up
+Double Arrow Left
+Double Arrow Right
+Новые иконки в блоке Finances
+Salary
+Calculator
+Debiting Funds
+Новые иконки в блоке Communications
+Аnnouncement
+Feedback
+Новые иконки в блоке Actions
+Fit To Screen
+Mobile Screenshot
+Rotate The Device
+Cut
+Eraser
+Attachment
+Add Attachment
+Scan Barcode
+Add Link
+Новые иконки в блоке Objects
+Fire
+Rocket
+Battery
+Signal
+News
+Freezing
+Light Bulb
+Key
+Passport
+License
+Trophy
+Tag
+Palm
+Connection
+Tv Set Top Box
+Router
+Новая иконка в блоке Social Networks
+Viber
+Добавлены продуктовые иконки
+Navigator
+Auto
+Auto Mobile
+Auto OS
+Exolve
+Добавлены логотипы
+Navigator
+Auto
+Auto OS
+Exolve
+Updated
+Music
+Текст в логотипе заменен с английского на русский
+Picture
+Добавлен размер 44+
+Support
+Добавлен 32 размер
+Chat
+Добавлен 32 размер
+Архив изменений 2023
+Архив изменений 2022-2021
+© 2025 ПАО «МТС» Все права защищены.
