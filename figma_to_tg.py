@@ -1,191 +1,159 @@
 import os
-import re
 import requests
-import time
-from datetime import datetime
+import hashlib
+import json
+
 from config import FRAME_CONFIGS
 
-# === НАСТРОЙКИ ===
+# Загрузка переменных из окружения
 FIGMA_TOKEN = os.getenv("FIGMA_TOKEN")
 TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("CHANNEL_ID")
+THREAD_ID = os.getenv("TELEGRAM_THREAD_ID")
+
+try:
+    THREAD_ID = int(THREAD_ID)
+except:
+    THREAD_ID = None
+
+HEADERS = {"X-Figma-Token": FIGMA_TOKEN}
 
 HISTORY_DIR = "history"
 os.makedirs(HISTORY_DIR, exist_ok=True)
 
-def sanitize_filename(filename):
-    """Заменяет недопустимые символы в именах файлов"""
-    return re.sub(r'[:]', '_', filename)
 
 def get_frame_text(file_id, node_id):
-    """Получает текст из Figma с сохранением структуры"""
     url = f"https://api.figma.com/v1/files/{file_id}/nodes?ids={node_id}"
-    headers = {"X-Figma-Token": FIGMA_TOKEN}
+    response = requests.get(url, headers=HEADERS)
+    if response.status_code != 200:
+        raise Exception(f"[FIGMA] Error {response.status_code}: {response.text}")
     
-    try:
-        response = requests.get(url, headers=headers, timeout=15)
-        response.raise_for_status()
-        data = response.json()
-        node = data["nodes"][node_id]["document"]
-        return extract_text_preserve_structure(node)
-    except Exception as e:
-        print(f"[ERROR] Ошибка получения текста для {file_id}:{node_id} - {str(e)}")
-        return ""
+    node = response.json()["nodes"][node_id]["document"]
+    return extract_text(node)
 
-def extract_text_preserve_structure(node):
-    """Извлекает текст, сохраняя оригинальную структуру строк"""
-    text = ""
-    
-    if node.get("type") == "TEXT" and "characters" in node:
-        text += node["characters"] + "\n"
-    
-    if "children" in node:
-        for child in node["children"]:
-            text += extract_text_preserve_structure(child)
-    
-    return text
 
-def get_last_text(frame_id):
-    safe_filename = sanitize_filename(frame_id)
-    filepath = f"{HISTORY_DIR}/{safe_filename}.txt"
-    if os.path.exists(filepath):
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return f.read()
-    return ""
+def extract_text(node):
+    result = []
 
-def save_last_text(frame_id, text):
-    safe_filename = sanitize_filename(frame_id)
-    filepath = f"{HISTORY_DIR}/{safe_filename}.txt"
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(text)
+    def recurse(n):
+        if n["type"] == "TEXT" and "characters" in n:
+            text = n["characters"].strip()
+            if text:
+                result.append(text)
+        for child in n.get("children", []):
+            recurse(child)
 
-def find_new_entries(old_text, new_text):
-    """Находит новые записи, сохраняя группировку по датам"""
-    if not old_text:
-        return new_text
-    
-    old_entries = split_into_entries(old_text)
-    new_entries = split_into_entries(new_text)
-    
-    added_entries = []
-    for date, entries in new_entries.items():
-        if date not in old_entries:
-            added_entries.append((date, entries))
-        else:
-            new_items = [e for e in entries if e not in old_entries[date]]
-            if new_items:
-                added_entries.append((date, new_items))
-    
-    return added_entries
+    recurse(node)
+    return result
 
-def split_into_entries(text):
-    """Разбивает текст на записи, сгруппированные по датам"""
-    entries = {}
-    current_date = None
-    current_items = []
-    
-    for line in text.splitlines():
-        line = line.strip()
-        if not line:
-            continue
-            
-        # Проверяем, является ли строка датой
-        if any(month in line.lower() for month in ["янв", "фев", "мар", "апр", "май", "июн", 
-                                                "июл", "авг", "сен", "окт", "ноя", "дек"]):
-            if current_date:
-                entries[current_date] = current_items
-            current_date = line
-            current_items = []
-        else:
-            current_items.append(line)
-    
-    if current_date:
-        entries[current_date] = current_items
-    
-    return entries
 
-def format_entries(title, entries):
-    """Форматирует записи для Telegram"""
-    if not entries:
-        return ""
-    
-    message = f"<b>🔄 Обновление в {title}</b>\n\n"
-    
-    for date, items in entries:
-        message += f"<b>{date}</b>\n"
-        for item in items:
-            message += f"{item}\n"
-        message += "\n"
-    
-    return message.strip()
+def load_hash(frame_id):
+    path = os.path.join(HISTORY_DIR, f"{frame_id}.txt")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return f.read().strip()
+    return None
 
-def send_telegram_message(message):
-    """Отправляет сообщение в Telegram"""
-    if not message or not message.strip():
+
+def save_hash(frame_id, text_list):
+    full_text = "\n".join(text_list).strip()
+    hash_val = hashlib.sha256(full_text.encode("utf-8")).hexdigest()
+    path = os.path.join(HISTORY_DIR, f"{frame_id}.txt")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(hash_val)
+    return hash_val
+
+
+def compute_hash(text_list):
+    return hashlib.sha256("\n".join(text_list).strip().encode("utf-8")).hexdigest()
+
+
+def get_diff(old_list, new_list):
+    old_set = set(old_list)
+    return [line for line in new_list if line not in old_set and line.strip()]
+
+
+def send_telegram_message(message, thread_id=None):
+    if not message.strip():
         return False
-    
+
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     data = {
         "chat_id": TELEGRAM_CHAT_ID,
         "text": message,
         "parse_mode": "HTML"
     }
-    
+
+    if thread_id is not None:
+        data["message_thread_id"] = thread_id
+
     try:
         response = requests.post(url, data=data, timeout=10)
         if response.status_code == 200:
             return True
-        print(f"[ERROR] Telegram API: {response.status_code}, {response.text}")
+        print(f"[TELEGRAM ERROR] {response.status_code}: {response.text}")
     except Exception as e:
-        print(f"[ERROR] Ошибка отправки: {str(e)}")
-    
+        print(f"[EXCEPTION] Telegram send failed: {e}")
     return False
 
-def process_frame(config):
-    frame_id = f"{config['file_id']}_{config['node_id']}"
-    print(f"\n[INFO] Проверка фрейма: {config['title']}")
-    
-    # Получаем текущий текст
-    current_text = get_frame_text(config["file_id"], config["node_id"])
-    if not current_text:
-        print("[WARNING] Не удалось получить текст из Figma")
+
+def process_frame(frame_config):
+    file_id = frame_config["file_id"]
+    node_id = frame_config["node_id"]
+    title = frame_config["title"]
+    frame_key = f"{file_id}_{node_id}".replace(":", "_")
+
+    print(f"📂 Обрабатываем фрейм: {title}")
+    try:
+        current_text = get_frame_text(file_id, node_id)
+    except Exception as e:
+        print(f"❌ Ошибка получения текста: {e}")
         return
-    
-    print("[DEBUG] Текущий текст из Figma:")
-    print(current_text)
-    
-    # Получаем предыдущую версию
-    last_text = get_last_text(frame_id)
-    
-    # Находим новые записи
-    new_entries = find_new_entries(last_text, current_text)
-    
-    if new_entries:
-        # Форматируем и отправляем сообщение
-        message = format_entries(config["title"], new_entries)
-        print("[DEBUG] Форматированное сообщение:")
-        print(message)
-        
-        if send_telegram_message(message):
-            print("[SUCCESS] Сообщение успешно отправлено")
-        else:
-            print("[ERROR] Не удалось отправить сообщение")
-        
-        # Сохраняем новую версию
-        save_last_text(frame_id, current_text)
+
+    new_hash = compute_hash(current_text)
+    old_hash = load_hash(frame_key)
+
+    if new_hash == old_hash:
+        print("✅ Без изменений.")
+        return
+
+    diff_lines = get_diff([], current_text) if not old_hash else get_diff(load_text_list(frame_key), current_text)
+
+    if not diff_lines:
+        print("⚠️ Хэш изменился, но новых строк не найдено.")
     else:
-        print("[INFO] Новых изменений не обнаружено")
+        message = f"<b>{title} — обновления</b>\n\n" + "\n".join(f"• {line}" for line in diff_lines)
+        if send_telegram_message(message, THREAD_ID):
+            print("📤 Изменения отправлены.")
+        else:
+            print("❌ Ошибка отправки в Telegram.")
+
+    save_text_list(frame_key, current_text)
+    save_hash(frame_key, current_text)
+
+
+def load_text_list(frame_key):
+    path = os.path.join(HISTORY_DIR, f"{frame_key}_text.json")
+    if os.path.exists(path):
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+
+def save_text_list(frame_key, text_list):
+    path = os.path.join(HISTORY_DIR, f"{frame_key}_text.json")
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(text_list, f, ensure_ascii=False, indent=2)
+
 
 def main():
-    print(f"\n=== Запуск проверки {datetime.now().strftime('%Y-%m-%d %H:%M:%S')} ===")
-    
-    for config in FRAME_CONFIGS:
-        try:
-            process_frame(config)
-        except Exception as e:
-            print(f"[ERROR] Ошибка обработки {config['title']}: {str(e)}")
-    
-    print("\n=== Проверка завершена ===")
+    print("🚀 Запуск процесса...")
+
+    for frame in FRAME_CONFIGS:
+        process_frame(frame)
+
+    print("✅ Готово.")
+
 
 if __name__ == "__main__":
     main()
