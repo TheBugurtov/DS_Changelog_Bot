@@ -2,6 +2,10 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
+44 июля 2025
+Added
+Cookie Banner
+добавлен новый компонент
 4 августа 2025
 Updated
 Cookie Banner
