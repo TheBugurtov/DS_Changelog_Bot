@@ -1,7 +1,11 @@
 # Figma to Telegram Changelog Bot
 
-![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/TheBugurtov/DS_Changelog_Bot/bot.yml?style=flat-square)
-![Python Version](https://img.shields.io/badge/python-3.11+-blue?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)
+![GPT](https://img.shields.io/badge/Made_with-ChatGPT-10a37f?style=flat&logo=openai&logoColor=white)
+![Build](https://img.shields.io/github/actions/workflow/status/TheBugurtov/DS_Changelog_Bot/bot.yml?label=Build&logo=githubactions&style=flat)
+
+
+
 
 Бот для автоматической публикации изменений из Figma в Telegram-канал. Отслеживает изменения в указанных фреймах и публикует их в формате changelog.
 
