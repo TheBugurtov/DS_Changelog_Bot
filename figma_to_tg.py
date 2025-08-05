@@ -4,7 +4,6 @@ import requests
 import time
 from datetime import datetime
 from config import FRAME_CONFIGS
-import traceback  # для дебага ошибок
 
 # === НАСТРОЙКИ ===
 FIGMA_TOKEN = os.getenv("FIGMA_TOKEN")
@@ -37,7 +36,6 @@ def get_frame_text(file_id, node_id):
         return extract_text_preserve_structure(node)
     except Exception as e:
         print(f"[ERROR] Ошибка получения текста для {file_id}:{node_id} - {str(e)}")
-        print(traceback.format_exc())  # подробный трейсбек
         return ""
 
 def extract_text_preserve_structure(node):
@@ -70,7 +68,8 @@ def save_last_text(frame_id, text):
 def find_new_entries(old_text, new_text):
     """Находит новые записи, сохраняя группировку по датам"""
     if not old_text:
-        return new_text
+        # Возвращаем сразу структурированные записи, чтобы избежать ошибок распаковки
+        return list(split_into_entries(new_text).items())
     
     old_entries = split_into_entries(old_text)
     new_entries = split_into_entries(new_text)
@@ -149,7 +148,6 @@ def send_telegram_message(message):
         print(f"[ERROR] Telegram API: {response.status_code}, {response.text}")
     except Exception as e:
         print(f"[ERROR] Ошибка отправки: {str(e)}")
-        print(traceback.format_exc())
     
     return False
 
@@ -163,10 +161,8 @@ def process_frame(config):
         print("[WARNING] Не удалось получить текст из Figma")
         return
     
-    # Логируем первые 200 символов, чтобы не засорять консоль
-    preview_len = 200
-    print("[DEBUG] Текущий текст из Figma (первые {} символов):".format(preview_len))
-    print(current_text[:preview_len] + ("..." if len(current_text) > preview_len else ""))
+    print("[DEBUG] Текущий текст из Figma (первые 200 символов):")
+    print(current_text[:200])
     
     # Получаем предыдущую версию
     last_text = get_last_text(frame_id)
@@ -197,8 +193,9 @@ def main():
         try:
             process_frame(config)
         except Exception as e:
-            print(f"[ERROR] Ошибка обработки {config['title']}: {str(e)}")
-            print(traceback.format_exc())
+            print(f"Error:  Ошибка обработки {config['title']}: {str(e)}")
+            import traceback
+            traceback.print_exc()
     
     print("\n=== Проверка завершена ===")
 
