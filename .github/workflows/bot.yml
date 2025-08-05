@@ -28,6 +28,7 @@ jobs:
           FIGMA_TOKEN: ${{ secrets.FIGMA_TOKEN }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHANNEL_ID: ${{ secrets.CHANNEL_ID }}
+          THREAD_ID: ${{ secrets.THREAD_ID }}
         run: python figma_to_tg.py
       
       - name: Commit and push changes
