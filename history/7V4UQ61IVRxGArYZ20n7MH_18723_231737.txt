@@ -1,1 +1,104 @@
-917e25f0238450eeee3301769d9e935c401f58897fa92360ec2a37b1925e54d1
+mts design system
+Changelog
+in progress
+Здесь отображены последние изменения в библиотеке.  
+14 июля 2025
+Updated
+Toast
+добавлены Text Properties на варианты без Avatar
+Modal Card
+настроена возможность отображать в компоненте заглушки из библиотеки Placeholders
+11 июля 2025
+Updated
+Card Background
+увеличение скруглений
+26 июня 2025
+Updated
+Icon Button
+ Icon Button Loader
+Icon Button w Indicator
+добавлен размер 24 Extra Small
+Icon Button Set Alternative
+добавлена возможность скрывать кнопки, дополнена спецификация
+17 июня 2025
+Updated
+Notification
+добавленo свойство Type и вариант в нём Custom
+Count Indicator
+добавлен новый размер 24 Large, вариант для цвета Custom и назначено свойство для ввода текста
+Nav Bar 2.0
+координаты Notification у кнопки изменены в целях синхронизации  с подобными компонентами в ДС
+Added
+Button Fill w Counter
+Button Hug w Indicator
+Icon Button w Indicator 
+добавлены новые компоненты кнопок с индикаторами
+Внимание!   Мы начинаем использовать новые настройки, которые позволяют
+переключать фон через переменные и не плодить лишние варианты.  Чем плохо большое количество вариантов? Это утяжеляет компонент, отнимает память в ваших продуктовых файлах и создает дополнительную нагрузку на дизайн-систему при обслуживании компонента, нагрузку на файл библиотеки.  Количество вариантов в старых компонентах с каждым рефакторингом будет сокращаться по мере возможности.
+ А пока можно посмотреть принцип работы в новых компонентах.
+15 мая 2025
+Added
+Tooltip Custom
+добавлен новый компонент
+14 мая 2025
+Updated
+Pagination Dots 
+синхронизация с веб-компонентом — расстояние между точками изменено с 12px на 8px
+Added
+Status Badge
+добавлен новый компонент бейджа-иконки
+Pagination Dots Clip
+Pagination Dots Alternative
+Pagination Dots Clip Alternative
+добавлены новые компоненты
+7 мая 2025
+Added
+Button Custom
+добавлен компонент и описание кастомной кнопки
+28-29 апреля 2025
+Updated
+Counter
+добавлен размер 20 Medium, а 18 Medium помечен как устаревший
+Choice Chip Multiselect Menu
+Choice Chip Multiselect Menu w Graphic 
+Hot Fix: счетчик изменен на размер 16
+26 февраля 2025
+Updated
+Emblem w Stroke
+добавлен Autolayout и Resizing Hug
+Option Control w Graphic
+добавлен Emblem w Stroke в левую часть
+20 февраля 2025
+Added
+Добавлена темизация под Bronevik
+Updated
+Count Indicator
+Notification
+Изменен цвет фона с Brand/MTS Red на Accent/Notification для корректной темизации
+7 февраля 2025
+Unpublished
+❗️❗️❗️ Из библиотеки удалены deprecated компоненты и ассеты, а также компоненты 1.0 версии
+21 января 2025
+Updated
+Button
+Button Loader
+Button Price
+Swipeable Button
+Gosuslugi Button
+Высота изменена на параметр Hug
+Swipeable Button
+Высота изменена на параметр Fix
+17 января 2025
+Updated
+Badge
+Добавлен размер компонента 20 S
+Button
+Button Loader
+Button Price
+Swipeable Button
+Gosuslugi Button
+Установлен min/max высоты для каждого размера кнопки
+Архив изменений 2024
+Архив изменений 2022-2023
+Архив изменений 2020-2021
+© 2025 ПАО «МТС» Все права защищены.
