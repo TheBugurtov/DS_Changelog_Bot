@@ -2,10 +2,10 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
-44 июля 2025
-Added
-Cookie Banner
-добавлен новый компонент
+19 августа 2025
+Updated
+Input Stepper
+Добавлено состояние Error Focused and Filled  и дополнена спецификация с описанием механики работы в контексте допустимых значений
 4 августа 2025
 Updated
 Cookie Banner
