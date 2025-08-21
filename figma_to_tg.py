@@ -112,17 +112,17 @@ def split_into_entries(text):
     return entries
 
 def format_entries(title, entries):
-    """Форматирует записи для Telegram"""
+    """Форматирует записи для Telegram с отступами"""
     if not entries:
         return ""
     
     message = f"<b>🔄 Обновление в {title}</b>\n\n"
     
     for date, items in entries:
-        message += f"<b>{date}</b>\n"
+        message += f"<b>{date}</b>\n\n"  # пустая строка после даты
         for item in items:
             message += f"{item}\n"
-        message += "\n"
+        message += "\n"  # пустая строка между группами внутри даты
     
     return message.strip()
 
