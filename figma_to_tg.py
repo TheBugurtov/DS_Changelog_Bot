@@ -9,7 +9,7 @@ from config import FRAME_CONFIGS
 FIGMA_TOKEN = os.getenv("FIGMA_TOKEN")
 TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("CHANNEL_ID")
-KEYWORDS = ["Updated", "Added", "Deleted", "Updated & Added"]
+KEYWORDS = ["Updated", "Added", "Deleted", "Updated & Added", "Deleted"]
 
 THREAD_ID = os.getenv("THREAD_ID")
 try:
