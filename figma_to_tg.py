@@ -9,6 +9,7 @@ from config import FRAME_CONFIGS
 FIGMA_TOKEN = os.getenv("FIGMA_TOKEN")
 TELEGRAM_BOT_TOKEN = os.getenv("BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.getenv("CHANNEL_ID")
+KEYWORDS = ["Updated", "Added", "Deleted", "Updated & Added"]
 
 THREAD_ID = os.getenv("THREAD_ID")
 try:
@@ -112,7 +113,7 @@ def split_into_entries(text):
     return entries
 
 def format_entries(title, entries):
-    """Форматирует записи для Telegram с отступами"""
+    """Форматирует записи для Telegram с отступами и жирными ключевыми словами"""
     if not entries:
         return ""
     
@@ -121,7 +122,13 @@ def format_entries(title, entries):
     for date, items in entries:
         message += f"<b>{date}</b>\n\n"  # пустая строка после даты
         for item in items:
-            message += f"{item}\n"
+            if item in KEYWORDS:
+                # добавляем пустую строку перед ключевым словом, если до него нет пустой строки
+                if not message.endswith("\n\n"):
+                    message += "\n"
+                message += f"<b>{item}</b>\n"
+            else:
+                message += f"{item}\n"
         message += "\n"  # пустая строка между группами внутри даты
     
     return message.strip()
