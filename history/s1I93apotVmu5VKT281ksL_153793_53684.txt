@@ -2,6 +2,12 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
+3 сентября 2025
+Updated
+Всем компонентам библиотеки добавлены теги
+Added
+Modal Page w Fixed Footer
+Добавлен новый компонент и дополнена спецификация
 18 июля 2025
 Updated
 Modal Card Graphic

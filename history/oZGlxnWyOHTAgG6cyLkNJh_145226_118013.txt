@@ -2,6 +2,10 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
+3 сентября 2025
+Updated
+Bottom Button Desktop
+Добавлен новый компонент.  Обновлена спецификация
 19 августа 2025
 Updated
 Input Stepper
