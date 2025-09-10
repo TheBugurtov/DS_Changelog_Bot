@@ -2,6 +2,19 @@ mts design system
 What’s new
 in progress
 Здесь отображены последние изменения в библиотеке.  
+10 сентября 2025
+Updated
+Button
+Button Loader
+Store Button
+Рефакторинг компонентов — deprecate половины вариантов, использование новых переменных
+Button with Indicator
+Icon Button with Indicator
+Токены для слоя Hover в Secondary и Negative изменены на новые переменные
+Primary Banner 
+В типе Positive&Negative перелинкованы кнопки в связи с рефакторингом кнопок
+Tooltip Custom
+В ассетах Tooltip Buttons w Steps и Tooltip Buttons кнопка «Назад» была изменена с Button на Button Custom
 3 сентября 2025
 Updated
 Bottom Button Desktop
