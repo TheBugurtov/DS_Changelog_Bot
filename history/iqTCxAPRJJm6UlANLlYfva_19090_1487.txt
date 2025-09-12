@@ -2,6 +2,11 @@ mts design system
 Changelog
 in progress
 Здесь отображены последние изменения в библиотеке.  
+11 сентября 2024
+Added
+Стили градиентов:
+Ecosystem Text/AI
+Ecosystem Background/AI
 5 сентября 2024
 Added
 Цвета Granat:
