@@ -1,8 +1,8 @@
 name: Figma Changelog Bot
 
 on:
-  schedule:
-    - cron: '0 7 * * *'  # Каждый день в 10:00 МСК
+  # schedule:
+  #   - cron: '0 7 * * *'  # Каждый день в 10:00 МСК
   workflow_dispatch:
 
 jobs:
