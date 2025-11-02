@@ -22,8 +22,8 @@
 ### 1. Клонируйте репозиторий
 
 ```bash
-git clone https://github.com/TheBugurtov/DS_Changelog_Bot.git
-cd DS_Changelog_Bot
+git clone https://github.com/TheBugurtov/Figma-to-Telegram-bot.git
+cd Figma-to-Telegram-bot
 ```
 
 ### 2. Настройте Secrets в GitHub
